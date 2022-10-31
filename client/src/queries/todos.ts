@@ -39,3 +39,32 @@ export const ADD_TODOS = gql`
     }
   }
 `;
+
+export const REMOVE_TODO = gql`
+  mutation removeTodo($id: ID!) {
+    deleteTodo(id: $id) {
+      data {
+        id
+        attributes {
+          job
+          done
+          description
+        }
+      }
+    }
+  }
+`;
+
+export const TOGGLE_DONE = gql`
+  mutation toggleDone($id: ID!, $status: Boolean!) {
+    updateTodo(id: $id, data: {done: $status}) {
+      data {
+        id
+        attributes {
+          job
+          done
+        }
+      }
+    }
+  }
+`;

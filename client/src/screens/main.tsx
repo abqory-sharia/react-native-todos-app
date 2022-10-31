@@ -4,7 +4,7 @@ import {Text, View, FlatList} from 'react-native';
 import {gql, useMutation} from '@apollo/client';
 import TodoInput from '../components/todo-input';
 import {useQuery} from '@apollo/client';
-import {GET_TODOS} from '../queries/todos';
+import {GET_TODOS, REMOVE_TODO, TOGGLE_DONE} from '../queries/todos';
 
 const initialData = [
   {
@@ -36,6 +36,7 @@ interface TodoItem {
   description?: string;
   createdAt: string;
   updatedAt: string;
+  attributes: {};
 }
 
 const todosParser = (todos: any) => {
@@ -44,30 +45,34 @@ const todosParser = (todos: any) => {
 
 export default function MainScreen() {
   const {data, loading, error} = useQuery(GET_TODOS);
+  const [deleteTodo] = useMutation(REMOVE_TODO, {
+    refetchQueries: [{query: GET_TODOS}],
+  });
+
+  const [updateTodo] = useMutation(TOGGLE_DONE, {
+    refetchQueries: [{query: GET_TODOS}],
+  });
+
   const todos: TodoItem[] = data?.todos?.data
     ? todosParser(data?.todos?.data)
     : [];
 
-  // const handleDelete = useCallback((item: Item) => {
-  //   console.info(item);
-  //   setTodos(prevTodo => {
-  //     const newTodo = prevTodo.filter(td => td !== item);
-  //     return newTodo;
-  //   });
-  // }, []);
+  const handleDelete = useCallback((todoId: number) => {
+    deleteTodo({
+      variables: {
+        id: todoId,
+      },
+    });
+  }, []);
 
-  // const toggleCheck = useCallback((item: Item) => {
-  //   console.info(item);
-  //   setTodos(prevTodo => {
-  //     const newTodo = [...prevTodo];
-  //     const index = prevTodo.indexOf(item);
-  //     newTodo[index] = {
-  //       ...item,
-  //       done: !item.done,
-  //     };
-  //     return newTodo;
-  //   });
-  // }, []);
+  const onToggleCheck = useCallback((todoId: number, done: boolean) => {
+    updateTodo({
+      variables: {
+        id: todoId,
+        status: !done,
+      },
+    });
+  }, []);
 
   return (
     <View
@@ -89,18 +94,17 @@ export default function MainScreen() {
           Rumah Penguin Todos App ⌣
         </Text>
       </View>
-      {/* <ScrollView>
-        <TodoListItem
-          data={todos}
-          // onRemove={handleDelete}
-          // onToggleCheck={toggleCheck}
-        />
-      </ScrollView> */}
 
       <FlatList
         data={todos}
         renderItem={({item, index}) => (
-          <TodoListItem idx={index + 1} job={item.job} done={item.done} />
+          <TodoListItem
+            idx={index + 1}
+            job={item.job}
+            done={item.done}
+            onToggleCheck={() => onToggleCheck(item.id, item.done)}
+            onRemove={() => handleDelete(item.id)}
+          />
         )}
       />
       <TodoInput />
