@@ -5,9 +5,9 @@
     /* Visit https://aka.ms/tsconfig.json to read more about this file */
     "jsx": "react-native",
     "baseUrl": "./",
-    "paths": {
-      "@/*": ["./src/*"]
-    },
+    // "paths": {
+    //   "@/*": ["./src/*"]
+    // },
     /* Completeness */
     "skipLibCheck": true                                 /* Skip type checking all .d.ts files. */
   }

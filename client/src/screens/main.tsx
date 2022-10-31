@@ -1,14 +1,7 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback} from 'react';
 import TodoListItem from '../components/todo-list-item';
-import {
-  ScrollView,
-  Text,
-  View,
-  TextInput,
-  TouchableOpacity,
-} from 'react-native';
+import {Text, View, FlatList} from 'react-native';
 import {gql, useMutation} from '@apollo/client';
-import Feather from 'react-native-vector-icons/Feather';
 import TodoInput from '../components/todo-input';
 import {useQuery} from '@apollo/client';
 import {GET_TODOS} from '../queries/todos';
@@ -45,8 +38,8 @@ interface TodoItem {
   updatedAt: string;
 }
 
-const todosParser = todos => {
-  return todos.map(todo => ({id: todo.id, ...todo.attributes}));
+const todosParser = (todos: any) => {
+  return todos.map((todo: TodoItem) => ({id: todo.id, ...todo.attributes}));
 };
 
 export default function MainScreen() {
@@ -96,14 +89,20 @@ export default function MainScreen() {
           Rumah Penguin Todos App ⌣
         </Text>
       </View>
-      <ScrollView>
+      {/* <ScrollView>
         <TodoListItem
           data={todos}
           // onRemove={handleDelete}
           // onToggleCheck={toggleCheck}
         />
-      </ScrollView>
+      </ScrollView> */}
 
+      <FlatList
+        data={todos}
+        renderItem={({item, index}) => (
+          <TodoListItem idx={index + 1} job={item.job} done={item.done} />
+        )}
+      />
       <TodoInput />
     </View>
   );
