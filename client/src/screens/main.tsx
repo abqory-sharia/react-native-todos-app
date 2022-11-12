@@ -1,10 +1,16 @@
 import React, {useCallback} from 'react';
 import TodoListItem from '../components/todo-list-item';
 import {Text, View, FlatList} from 'react-native';
-import {gql, useMutation} from '@apollo/client';
+import {gql, useLazyQuery, useMutation} from '@apollo/client';
 import TodoInput from '../components/todo-input';
 import {useQuery} from '@apollo/client';
-import {GET_TODOS, REMOVE_TODO, TOGGLE_DONE} from '../queries/todos';
+import {
+  GET_TODOS,
+  GET_TODOS_PER_USER,
+  REMOVE_TODO,
+  TOGGLE_DONE,
+} from '../queries/todos';
+import useStore from '../store/store';
 
 const initialData = [
   {
@@ -44,13 +50,17 @@ const todosParser = (todos: any) => {
 };
 
 export default function MainScreen() {
-  const {data, loading, error} = useQuery(GET_TODOS);
+  const {
+    users: {userId},
+  } = useStore(state => state.auth);
+  const {data, loading, error} = useQuery(GET_TODOS_PER_USER);
+  // const [filterTodos, {data: todosPerUSer}] = useLazyQuery(GET_TODOS_PER_USER);
   const [deleteTodo] = useMutation(REMOVE_TODO, {
-    refetchQueries: [{query: GET_TODOS}],
+    refetchQueries: [{query: GET_TODOS_PER_USER}],
   });
 
   const [updateTodo] = useMutation(TOGGLE_DONE, {
-    refetchQueries: [{query: GET_TODOS}],
+    refetchQueries: [{query: GET_TODOS_PER_USER}],
   });
 
   const todos: TodoItem[] = data?.todos?.data

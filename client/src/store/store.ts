@@ -1,25 +1,39 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import create from 'zustand';
+import {persist} from 'zustand/middleware';
 
 type Store = {
   auth: {
-    user: any;
+    users: any;
     token: string;
     isLogin: boolean;
-    login?: (data: any) => Promise<void>;
-    logout?: () => void;
+    loginApp: (userId: string, jwt: string) => void;
+    logout: () => void;
   };
 };
 
-const useStore = create<Store>((set, get) => ({
-  auth: {
-    user: {},
-    token: '',
-    isLogin: false,
-    login: async (data: any) => {
-      console.log(data);
+const useStore = create(
+  persist<Store>(
+    (set, get) => ({
+      auth: {
+        users: {},
+        token: '',
+        isLogin: false,
+        loginApp: (userId: string, jwt: string) => {
+          set({
+            auth: {...get().auth, users: {userId}, token: jwt, isLogin: true},
+          });
+        },
+        logout: () => {
+          set({auth: {...get().auth, users: {}, token: '', isLogin: false}});
+        },
+      },
+    }),
+    {
+      name: 'login-storage',
+      getStorage: () => AsyncStorage,
     },
-    logout: () => console.log('log out'),
-  },
-}));
+  ),
+);
 
 export default useStore;

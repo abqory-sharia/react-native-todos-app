@@ -14,7 +14,7 @@
       "name": "Apache 2.0",
       "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
     },
-    "x-generation-date": "2022-11-11T13:05:09.049Z"
+    "x-generation-date": "2022-11-12T00:18:36.013Z"
   },
   "x-strapi-config": {
     "path": "/documentation",
@@ -104,7 +104,7 @@
           "description": {
             "type": "string"
           },
-          "author": {
+          "users_permissions_user": {
             "oneOf": [
               {
                 "type": "integer"
@@ -142,7 +142,7 @@
               "description": {
                 "type": "string"
               },
-              "author": {
+              "users_permissions_user": {
                 "oneOf": [
                   {
                     "type": "integer"
@@ -175,7 +175,7 @@
           "description": {
             "type": "string"
           },
-          "author": {
+          "users_permissions_user": {
             "type": "object",
             "properties": {
               "data": {
@@ -754,7 +754,7 @@
               "description": {
                 "type": "string"
               },
-              "author": {
+              "users_permissions_user": {
                 "type": "object",
                 "properties": {
                   "data": {
@@ -1337,7 +1337,7 @@
               "description": {
                 "type": "string"
               },
-              "author": {
+              "users_permissions_user": {
                 "type": "object",
                 "properties": {
                   "data": {
@@ -1951,7 +1951,7 @@
               "description": {
                 "type": "string"
               },
-              "author": {
+              "users_permissions_user": {
                 "type": "object",
                 "properties": {
                   "data": {
@@ -2534,7 +2534,7 @@
               "description": {
                 "type": "string"
               },
-              "author": {
+              "users_permissions_user": {
                 "type": "object",
                 "properties": {
                   "data": {

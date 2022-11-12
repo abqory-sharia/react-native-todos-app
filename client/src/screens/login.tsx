@@ -1,13 +1,28 @@
-import React, {useState} from 'react';
+import {useMutation} from '@apollo/client';
+import React, {useCallback, useState} from 'react';
 import {Button, Text, TextInput, View} from 'react-native';
+import useStore from '../store/store';
+import {LOGIN} from '../queries/users';
 
 export default function LoginScreen() {
   const [identifier, setIdentifier] = useState('');
   const [password, setPassword] = useState('');
+  const {loginApp} = useStore(state => state.auth);
+  const [login] = useMutation(LOGIN);
 
-  console.info('identifier', identifier);
-  console.info('password', password);
+  const handleLogin = useCallback(() => {
+    login({variables: {input: {identifier, password}}})
+      .then(data => {
+        if (!data) return;
+        const userId = data.data?.login?.user.id;
+        const jwt = data.data?.login?.jwt;
+        loginApp(userId, jwt);
+      })
+      .catch(err => console.info(err));
+  }, []);
 
+  // todos@mail.com
+  // todo112345;
   return (
     <View
       style={{
@@ -44,7 +59,7 @@ export default function LoginScreen() {
             marginVertical: 8,
           }}
         />
-        <Button title="Login" color="#243B55" />
+        <Button title="Login" color="#243B55" onPress={handleLogin} />
       </View>
     </View>
   );

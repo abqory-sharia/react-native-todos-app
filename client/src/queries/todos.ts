@@ -26,6 +26,21 @@ export const GET_TODOS = gql`
   }
 `;
 
+export const GET_TODOS_PER_USER = gql`
+  query filterTodos($id: ID) {
+    todos(filters: {users_permissions_user: {id: {eq: $id}}}) {
+      data {
+        id
+        attributes {
+          job
+          done
+          description
+        }
+      }
+    }
+  }
+`;
+
 export const ADD_TODOS = gql`
   mutation addTodo($data: TodoInput!) {
     createTodo(data: $data) {
