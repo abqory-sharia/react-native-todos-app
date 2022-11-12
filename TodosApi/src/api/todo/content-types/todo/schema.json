@@ -43,6 +43,11 @@
       },
       "type": "text",
       "required": false
+    },
+    "author": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "plugin::users-permissions.user"
     }
   }
 }
