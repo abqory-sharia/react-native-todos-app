@@ -1,4 +1,7 @@
 import {gql} from '@apollo/client';
+import useStore from '../store/store';
+
+const {users} = useStore(state => state.auth);
 
 export const GET_TODOS = gql`
   query {
@@ -27,8 +30,7 @@ export const GET_TODOS = gql`
 `;
 
 export const GET_TODOS_PER_USER = gql`
-  query filterTodos($id: ID) {
-    todos(filters: {users_permissions_user: {id: {eq: $id}}}) {
+  query { todos(filters: {users_permissions_user: {id: {eq: ${users}}}}) {
       data {
         id
         attributes {
