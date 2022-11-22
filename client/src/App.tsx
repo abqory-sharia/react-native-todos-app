@@ -1,4 +1,3 @@
-import {NavigationContainer} from '@react-navigation/native';
 import {StatusBar} from 'react-native';
 import {ApolloClient, InMemoryCache, ApolloProvider} from '@apollo/client';
 import Navigation from './navs';
@@ -12,10 +11,8 @@ const client = new ApolloClient({
 const App = () => {
   return (
     <ApolloProvider client={client}>
-      <NavigationContainer>
-        <StatusBar />
-        <Navigation />
-      </NavigationContainer>
+      <StatusBar />
+      <Navigation />
     </ApolloProvider>
   );
 };

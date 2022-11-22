@@ -8,7 +8,7 @@ export default function LoginScreen() {
   const [identifier, setIdentifier] = useState('');
   const [password, setPassword] = useState('');
   const {loginApp} = useStore(state => state.auth);
-  const [login] = useMutation(LOGIN);
+  const [login, {error}] = useMutation(LOGIN);
 
   const handleLogin = useCallback(() => {
     login({variables: {input: {identifier, password}}})
@@ -20,6 +20,10 @@ export default function LoginScreen() {
       })
       .catch(err => console.info(err));
   }, []);
+
+  if (error) {
+    return <Text>User Belum terdaftart</Text>;
+  }
 
   // todos@mail.com
   // todo112345;

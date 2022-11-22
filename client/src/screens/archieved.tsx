@@ -1,37 +1,8 @@
+import {useMutation, useQuery} from '@apollo/client';
 import React, {useCallback} from 'react';
-import TodoListItem from '../components/todo-list-item';
 import {Text, View, FlatList} from 'react-native';
-import {useQuery, useMutation} from '@apollo/client';
-import TodoInput from '../components/todo-input';
-import {
-  GET_TODOS_ARCHIEVED,
-  GET_TODOS_PER_USER,
-  REMOVE_TODO,
-  TOGGLE_DONE,
-} from '../queries/todos';
-
-const initialData = [
-  {
-    id: 99,
-    job: 'Create Agency Website',
-    done: false,
-  },
-  {
-    id: 100,
-    job: 'Doing React Native',
-    done: false,
-  },
-  {
-    id: 101,
-    job: 'Doing PPT Design',
-    done: true,
-  },
-  {
-    id: 102,
-    job: 'Doing Graphic Design',
-    done: false,
-  },
-];
+import {GET_TODOS_ARCHIEVED, TOGGLE_DONE} from '../queries/todos';
+import TodoListItem from '../components/todo-list-item';
 
 interface TodoItem {
   id: number;
@@ -47,35 +18,20 @@ const todosParser = (todos: any) => {
   return todos.map((todo: TodoItem) => ({id: todo.id, ...todo.attributes}));
 };
 
-export default function MainScreen() {
-  const {data, loading, error} = useQuery(GET_TODOS_PER_USER);
-  const [deleteTodo] = useMutation(REMOVE_TODO, {
-    refetchQueries: [{query: GET_TODOS_PER_USER}],
-  });
-
+export default function Archived() {
+  const {data, error} = useQuery(GET_TODOS_ARCHIEVED);
   const [updateTodo] = useMutation(TOGGLE_DONE, {
     refetchQueries: [{query: GET_TODOS_ARCHIEVED}],
   });
-
   const todos: TodoItem[] = data?.todos?.data
     ? todosParser(data?.todos?.data)
     : [];
-
-  console.info(data);
-
-  const handleDelete = useCallback((todoId: number) => {
-    deleteTodo({
-      variables: {
-        id: todoId,
-      },
-    });
-  }, []);
 
   const onToggleCheck = useCallback((todoId: number) => {
     updateTodo({
       variables: {
         id: todoId,
-        status: true,
+        status: false,
       },
     });
   }, []);
@@ -109,11 +65,10 @@ export default function MainScreen() {
             job={item.job}
             done={item.done}
             onToggleCheck={() => onToggleCheck(item.id)}
-            onRemove={() => handleDelete(item.id)}
+            // onRemove={() => handleDelete(item.id)}
           />
         )}
       />
-      {/* <TodoInput /> */}
     </View>
   );
 }

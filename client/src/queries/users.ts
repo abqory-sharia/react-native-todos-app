@@ -8,7 +8,6 @@ export const LOGIN = gql`
         id
         username
         email
-        confirmed
       }
     }
   }
