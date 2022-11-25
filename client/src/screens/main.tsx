@@ -9,46 +9,15 @@ import {
   REMOVE_TODO,
   TOGGLE_DONE,
 } from '../queries/todos';
-
-const initialData = [
-  {
-    id: 99,
-    job: 'Create Agency Website',
-    done: false,
-  },
-  {
-    id: 100,
-    job: 'Doing React Native',
-    done: false,
-  },
-  {
-    id: 101,
-    job: 'Doing PPT Design',
-    done: true,
-  },
-  {
-    id: 102,
-    job: 'Doing Graphic Design',
-    done: false,
-  },
-];
-
-interface TodoItem {
-  id: number;
-  job: string;
-  done: boolean;
-  description?: string;
-  createdAt: string;
-  updatedAt: string;
-  attributes: {};
-}
-
-const todosParser = (todos: any) => {
-  return todos.map((todo: TodoItem) => ({id: todo.id, ...todo.attributes}));
-};
+import {TodoItem, todosParser} from '../utils/todo';
+import useStore from '../store/store';
+import {useFocusEffect} from '@react-navigation/native';
 
 export default function MainScreen() {
-  const {data, loading, error} = useQuery(GET_TODOS_PER_USER);
+  const {users} = useStore(state => state.auth);
+  const {data, loading, error, refetch} = useQuery(GET_TODOS_PER_USER, {
+    variables: {userId: users},
+  });
   const [deleteTodo] = useMutation(REMOVE_TODO, {
     refetchQueries: [{query: GET_TODOS_PER_USER}],
   });
@@ -61,7 +30,11 @@ export default function MainScreen() {
     ? todosParser(data?.todos?.data)
     : [];
 
-  console.info(data);
+  useFocusEffect(
+    useCallback(() => {
+      refetch();
+    }, []),
+  );
 
   const handleDelete = useCallback((todoId: number) => {
     deleteTodo({

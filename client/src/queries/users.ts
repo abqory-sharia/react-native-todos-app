@@ -12,3 +12,37 @@ export const LOGIN = gql`
     }
   }
 `;
+
+export const REGISTRATION = gql`
+  mutation registration($data: UsersPermissionsUserInput!) {
+    createUsersPermissionsUser(data: $data) {
+      data {
+        attributes {
+          email
+          username
+          confirmed
+        }
+      }
+    }
+  }
+`;
+
+export const GET_USER_PROFILE = gql`
+  query getUserProfile($id: ID!) {
+    usersPermissionsUsers(filters: {id: {eq: $id}}) {
+      data {
+        attributes {
+          username
+          email
+          profileImage {
+            data {
+              attributes {
+                url
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;

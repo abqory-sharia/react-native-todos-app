@@ -65,6 +65,7 @@ export default function LoginScreen() {
         />
         <Button title="Login" color="#243B55" onPress={handleLogin} />
       </View>
+      {/* <Text onPress={}>Register</Text> */}
     </View>
   );
 }

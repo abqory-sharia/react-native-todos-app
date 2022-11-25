@@ -1,31 +1,33 @@
 import {useMutation, useQuery} from '@apollo/client';
 import React, {useCallback} from 'react';
 import {Text, View, FlatList} from 'react-native';
-import {GET_TODOS_ARCHIEVED, TOGGLE_DONE} from '../queries/todos';
+import {
+  GET_TODOS_ARCHIEVED,
+  GET_TODOS_PER_USER,
+  TOGGLE_DONE,
+} from '../queries/todos';
 import TodoListItem from '../components/todo-list-item';
-
-interface TodoItem {
-  id: number;
-  job: string;
-  done: boolean;
-  description?: string;
-  createdAt: string;
-  updatedAt: string;
-  attributes: {};
-}
-
-const todosParser = (todos: any) => {
-  return todos.map((todo: TodoItem) => ({id: todo.id, ...todo.attributes}));
-};
+import useStore from '../store/store';
+import {TodoItem, todosParser} from '../utils/todo';
+import {useFocusEffect} from '@react-navigation/native';
 
 export default function Archived() {
-  const {data, error} = useQuery(GET_TODOS_ARCHIEVED);
+  const {users} = useStore(state => state.auth);
+  const {data, error, refetch} = useQuery(GET_TODOS_ARCHIEVED, {
+    variables: {userId: users},
+  });
   const [updateTodo] = useMutation(TOGGLE_DONE, {
-    refetchQueries: [{query: GET_TODOS_ARCHIEVED}],
+    refetchQueries: [{query: GET_TODOS_PER_USER}],
   });
   const todos: TodoItem[] = data?.todos?.data
     ? todosParser(data?.todos?.data)
     : [];
+
+  useFocusEffect(
+    useCallback(() => {
+      refetch();
+    }, []),
+  );
 
   const onToggleCheck = useCallback((todoId: number) => {
     updateTodo({

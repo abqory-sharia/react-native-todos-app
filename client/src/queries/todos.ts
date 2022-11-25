@@ -1,7 +1,4 @@
 import {gql} from '@apollo/client';
-import useStore from '../store/store';
-
-const {users} = useStore(state => state.auth);
 
 export const GET_TODOS = gql`
   query {
@@ -30,8 +27,27 @@ export const GET_TODOS = gql`
 `;
 
 export const GET_TODOS_PER_USER = gql`
-  query {
-    todos(filters: {done: {eq: false}, users_permissions_user: {id: {eq: ${users}}}}) {
+  query getTodos($userId: ID!) {
+    todos(
+      filters: {done: {eq: false}, users_permissions_user: {id: {eq: $userId}}}
+    ) {
+      data {
+        id
+        attributes {
+          job
+          description
+          done
+        }
+      }
+    }
+  }
+`;
+
+export const GET_TODOS_ARCHIEVED = gql`
+  query getArchieved($userId: ID!) {
+    todos(
+      filters: {done: {eq: true}, users_permissions_user: {id: {eq: $userId}}}
+    ) {
       data {
         id
         attributes {
@@ -43,20 +59,6 @@ export const GET_TODOS_PER_USER = gql`
     }
   }
 `;
-
-export const GET_TODOS_ARCHIEVED = gql`
-  query {
-    todos(filters: {done: {eq: true}, users_permissions_user: {id: {eq: ${users}}}}) {
-      data {
-        id
-        attributes {
-          job
-          done
-          description
-        }
-      }
-    }
-  }`;
 
 export const ADD_TODOS = gql`
   mutation addTodo($data: TodoInput!) {
