@@ -7,21 +7,25 @@ import {LOGIN} from '../queries/users';
 export default function LoginScreen() {
   const [identifier, setIdentifier] = useState('');
   const [password, setPassword] = useState('');
-  const {loginApp} = useStore(state => state.auth);
+  const {loginApp} = useStore();
   const [login, {error}] = useMutation(LOGIN);
 
-  const handleLogin = useCallback(() => {
+  console.log(loginApp);
+
+  const handleLogin = () => {
     login({variables: {input: {identifier, password}}})
       .then(data => {
         if (!data) return;
         const userId = data.data?.login?.user.id;
         const jwt = data.data?.login?.jwt;
+
         loginApp(userId, jwt);
       })
       .catch(err => console.info(err));
-  }, []);
+  };
 
   if (error) {
+    console.log(JSON.stringify(error, null, 2));
     return <Text>User Belum terdaftart</Text>;
   }
 

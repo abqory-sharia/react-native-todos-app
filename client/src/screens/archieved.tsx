@@ -12,7 +12,7 @@ import {TodoItem, todosParser} from '../utils/todo';
 import {useFocusEffect} from '@react-navigation/native';
 
 export default function Archived() {
-  const {users} = useStore(state => state.auth);
+  const {users} = useStore();
   const {data, error, refetch} = useQuery(GET_TODOS_ARCHIEVED, {
     variables: {userId: users},
   });

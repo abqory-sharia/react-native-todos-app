@@ -14,7 +14,7 @@ import useStore from '../store/store';
 import {useFocusEffect} from '@react-navigation/native';
 
 export default function MainScreen() {
-  const {users} = useStore(state => state.auth);
+  const {users} = useStore();
   const {data, loading, error, refetch} = useQuery(GET_TODOS_PER_USER, {
     variables: {userId: users},
   });
