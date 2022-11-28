@@ -12,7 +12,7 @@ import {TodoItem, todosParser} from '../utils/todo';
 import {useFocusEffect} from '@react-navigation/native';
 
 export default function Archived() {
-  const {users} = useStore(state => state.auth);
+  const {users} = useStore();
   const {data, error, refetch} = useQuery(GET_TODOS_ARCHIEVED, {
     variables: {userId: users},
   });
@@ -34,6 +34,7 @@ export default function Archived() {
       variables: {
         id: todoId,
         status: false,
+        users_permissions_user: users,
       },
     });
   }, []);
@@ -67,7 +68,7 @@ export default function Archived() {
             job={item.job}
             done={item.done}
             onToggleCheck={() => onToggleCheck(item.id)}
-            // onRemove={() => handleDelete(item.id)}
+            main="archieve"
           />
         )}
       />

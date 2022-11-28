@@ -14,21 +14,26 @@ import useStore from '../store/store';
 import {useFocusEffect} from '@react-navigation/native';
 
 export default function MainScreen() {
-  const {users} = useStore(state => state.auth);
+  const {users} = useStore();
   const {data, loading, error, refetch} = useQuery(GET_TODOS_PER_USER, {
-    variables: {userId: users},
+    variables: {userId: users.userId},
   });
   const [deleteTodo] = useMutation(REMOVE_TODO, {
     refetchQueries: [{query: GET_TODOS_PER_USER}],
   });
 
-  const [updateTodo] = useMutation(TOGGLE_DONE, {
+  const [updateTodo, {error: errToggle}] = useMutation(TOGGLE_DONE, {
     refetchQueries: [{query: GET_TODOS_ARCHIEVED}],
   });
 
   const todos: TodoItem[] = data?.todos?.data
     ? todosParser(data?.todos?.data)
     : [];
+
+  if (error) {
+    console.error(JSON.stringify(error, null, 2));
+    console.info(users);
+  }
 
   useFocusEffect(
     useCallback(() => {
@@ -48,9 +53,15 @@ export default function MainScreen() {
     updateTodo({
       variables: {
         id: todoId,
-        status: true,
+        data: {
+          status: true,
+          users_permissions_user: users.userId,
+        },
       },
     });
+    if (errToggle) {
+      console.warn(JSON.stringify(errToggle, null, 2));
+    }
   }, []);
 
   return (
@@ -83,10 +94,11 @@ export default function MainScreen() {
             done={item.done}
             onToggleCheck={() => onToggleCheck(item.id)}
             onRemove={() => handleDelete(item.id)}
+            main="main"
           />
         )}
       />
-      {/* <TodoInput /> */}
+      <TodoInput />
     </View>
   );
 }

@@ -1,31 +1,5 @@
 import {gql} from '@apollo/client';
 
-export const GET_TODOS = gql`
-  query {
-    todos {
-      data {
-        id
-        attributes {
-          job
-          done
-          description
-          createdAt
-          updatedAt
-        }
-        __typename
-      }
-      meta {
-        pagination {
-          page
-          total
-          pageSize
-        }
-        __typename
-      }
-    }
-  }
-`;
-
 export const GET_TODOS_PER_USER = gql`
   query getTodos($userId: ID!) {
     todos(
@@ -68,6 +42,16 @@ export const ADD_TODOS = gql`
         attributes {
           job
           done
+          description
+          users_permissions_user {
+            data {
+              id
+              attributes {
+                username
+                email
+              }
+            }
+          }
         }
       }
     }
@@ -90,13 +74,14 @@ export const REMOVE_TODO = gql`
 `;
 
 export const TOGGLE_DONE = gql`
-  mutation toggleDone($id: ID!, $status: Boolean!) {
-    updateTodo(id: $id, data: {done: $status}) {
+  mutation toggleDone($id: ID!, $data: TodoInput!) {
+    updateTodo(id: $id, data: $data) {
       data {
         id
         attributes {
           job
           done
+          description
         }
       }
     }

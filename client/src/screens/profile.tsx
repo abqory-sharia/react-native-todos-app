@@ -1,18 +1,22 @@
 import {useQuery} from '@apollo/client';
 import React, {useCallback} from 'react';
 import {Button, FlatList, Image, Text, View} from 'react-native';
+import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import {GET_USER_PROFILE} from '../queries/users';
 import useStore from '../store/store';
 import {todosParser} from '../utils/todo';
+import {RootStackParamList} from '../navs';
 interface ProfileItemProps {
   username: string;
   email: string;
-  profileImage?: string;
+  profileImage?: any;
 }
 
-export default function Profile({navigation}) {
-  const {logout} = useStore(state => state.auth);
+type Props = NativeStackScreenProps<RootStackParamList, 'Profile'>;
+
+export default function Profile({navigation}: Props) {
+  const {logout} = useStore();
 
   const {data, error} = useQuery(GET_USER_PROFILE, {variables: {id: 1}});
 
@@ -24,8 +28,6 @@ export default function Profile({navigation}) {
 
   const handleLogout = useCallback(() => {
     logout();
-    console.info(logout());
-    navigation.replace('login');
   }, []);
 
   console.log(profile);

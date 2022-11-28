@@ -14,14 +14,13 @@ export const LOGIN = gql`
 `;
 
 export const REGISTRATION = gql`
-  mutation registration($data: UsersPermissionsUserInput!) {
-    createUsersPermissionsUser(data: $data) {
-      data {
-        attributes {
-          email
-          username
-          confirmed
-        }
+  mutation registerUser($data: UsersPermissionsRegisterInput!) {
+    register(input: $data) {
+      jwt
+      user {
+        id
+        username
+        email
       }
     }
   }

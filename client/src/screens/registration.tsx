@@ -1,10 +1,25 @@
-import React, {useState} from 'react';
-import {Text, View, TextInput} from 'react-native';
+import React, {useCallback, useState} from 'react';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {Text, View, TextInput, Button} from 'react-native';
+import {RootStackParamList} from '../navs';
+import {useMutation} from '@apollo/client';
+import {REGISTRATION} from '../queries/users';
 
-export default function Registration() {
+type Props = NativeStackScreenProps<RootStackParamList, 'Register'>;
+
+export default function Registration({navigation}: Props) {
+  const [register, {data, error}] = useMutation(REGISTRATION);
   const [username, setName] = useState('');
   const [password, setPass] = useState('');
   const [email, setEmail] = useState('');
+
+  if (error) {
+    console.info(JSON.stringify(error, null, 2));
+  }
+  const handleRegistration = useCallback(() => {
+    register({variables: {username, email, password}});
+    console.info(JSON.stringify(data, null, 2));
+  }, [username, password, email]);
   return (
     <View
       style={{
@@ -52,7 +67,14 @@ export default function Registration() {
             marginVertical: 8,
           }}
         />
-        {/* <Button title="Login" color="#243B55" onPress={handleLogin} /> */}
+        <Button title="Login" color="#243B55" onPress={handleRegistration} />
+      </View>
+      <View style={{width: '80%'}}>
+        <Text
+          style={{color: 'blue', textAlign: 'right'}}
+          onPress={() => navigation.navigate('Login')}>
+          Login
+        </Text>
       </View>
     </View>
   );

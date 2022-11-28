@@ -2,12 +2,14 @@ import {useMutation} from '@apollo/client';
 import React, {useState} from 'react';
 import {View, TextInput, TouchableOpacity} from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
-import {ADD_TODOS, GET_TODOS} from '../queries/todos';
+import {ADD_TODOS, GET_TODOS_PER_USER} from '../queries/todos';
+import useStore from '../store/store';
 
 export default function TodoInput() {
+  const {users} = useStore();
   const [input, setInput] = useState('');
-  const [createTodo] = useMutation(ADD_TODOS, {
-    refetchQueries: [{query: GET_TODOS}],
+  const [createTodo, {error: errCreate}] = useMutation(ADD_TODOS, {
+    refetchQueries: [{query: GET_TODOS_PER_USER}],
   });
 
   const handleAddTodo = () => {
@@ -20,10 +22,15 @@ export default function TodoInput() {
           job: input,
           description: '',
           done: false,
+          users_permissions_user: users.userId,
         },
       },
     });
   };
+
+  if (errCreate) {
+    console.info(JSON.stringify(errCreate, null, 2));
+  }
 
   return (
     <View

@@ -6,11 +6,21 @@ import useStore from './store/store';
 import LoginScreen from './screens/login';
 import Archived from './screens/archieved';
 import BottomTab from './navigation/bottomTab';
+import Registration from './screens/registration';
 
-const Stack = createNativeStackNavigator();
+export type RootStackParamList = {
+  Login: undefined;
+  Register: undefined;
+  'Bottom Tab': undefined;
+  Archived: undefined;
+  Beranda: undefined;
+  Profile: undefined;
+};
+
+const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function Navigation() {
-  const {isLogin, token} = useStore(state => state.auth);
+  const {isLogin, token} = useStore();
 
   return (
     <NavigationContainer>
@@ -21,16 +31,6 @@ export default function Navigation() {
             component={BottomTab}
             options={{headerShown: false}}
           />
-          <Stack.Screen
-            name="Main"
-            options={{headerShown: false}}
-            component={MainScreen}
-          />
-          <Stack.Screen
-            name="Archieved"
-            options={{headerShown: false}}
-            component={Archived}
-          />
         </Stack.Navigator>
       ) : (
         <Stack.Navigator>
@@ -38,6 +38,11 @@ export default function Navigation() {
             name="Login"
             options={{headerShown: false}}
             component={LoginScreen}
+          />
+          <Stack.Screen
+            name="Register"
+            options={{headerShown: false}}
+            component={Registration}
           />
         </Stack.Navigator>
       )}

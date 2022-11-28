@@ -8,6 +8,7 @@ interface TodoListItemsProps {
   idx: number;
   job: string;
   done: boolean;
+  main: 'main' | 'archieve';
 }
 
 export default function TodoListItem({
@@ -16,6 +17,7 @@ export default function TodoListItem({
   idx,
   job,
   done,
+  main,
 }: TodoListItemsProps) {
   const finishJob = done ? 'line-through' : 'none';
 
@@ -80,6 +82,7 @@ export default function TodoListItem({
                 alignItems: 'center',
                 justifyContent: 'center',
                 marginLeft: 10,
+                display: main === 'main' ? 'flex' : 'none',
               }}
               onPress={onRemove}>
               <Feather name="trash-2" color="#E2EAF3" size={18} />

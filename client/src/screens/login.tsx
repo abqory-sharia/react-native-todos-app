@@ -3,11 +3,15 @@ import React, {useCallback, useState} from 'react';
 import {Button, Text, TextInput, View} from 'react-native';
 import useStore from '../store/store';
 import {LOGIN} from '../queries/users';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {RootStackParamList} from '../navs';
 
-export default function LoginScreen() {
+type Props = NativeStackScreenProps<RootStackParamList, 'Login'>;
+
+export default function LoginScreen({navigation}: Props) {
   const [identifier, setIdentifier] = useState('');
   const [password, setPassword] = useState('');
-  const {loginApp} = useStore(state => state.auth);
+  const {setAuth, token} = useStore();
   const [login, {error}] = useMutation(LOGIN);
 
   const handleLogin = useCallback(() => {
@@ -16,13 +20,15 @@ export default function LoginScreen() {
         if (!data) return;
         const userId = data.data?.login?.user.id;
         const jwt = data.data?.login?.jwt;
-        loginApp(userId, jwt);
+        setAuth(userId, jwt);
       })
       .catch(err => console.info(err));
   }, []);
 
   if (error) {
-    return <Text>User Belum terdaftart</Text>;
+    console.info(JSON.stringify(error, null, 2));
+    console.info(token, 'token');
+    // return <Text>{error}</Text>;
   }
 
   // todos@mail.com
@@ -65,7 +71,13 @@ export default function LoginScreen() {
         />
         <Button title="Login" color="#243B55" onPress={handleLogin} />
       </View>
-      {/* <Text onPress={}>Register</Text> */}
+      <View style={{width: '80%'}}>
+        <Text
+          style={{color: 'blue', textAlign: 'right'}}
+          onPress={() => navigation.navigate('Register')}>
+          Register
+        </Text>
+      </View>
     </View>
   );
 }
