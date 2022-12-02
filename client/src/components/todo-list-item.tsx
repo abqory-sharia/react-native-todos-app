@@ -1,26 +1,7 @@
-import React from 'react';
-import {View, Text, TouchableOpacity} from 'react-native';
+import {Text, View, TouchableOpacity} from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
 
-interface TodoListItemsProps {
-  onToggleCheck?: () => void;
-  onRemove?: () => void;
-  idx: number;
-  job: string;
-  done: boolean;
-  main: 'main' | 'archieve';
-}
-
-export default function TodoListItem({
-  onToggleCheck,
-  onRemove,
-  idx,
-  job,
-  done,
-  main,
-}: TodoListItemsProps) {
-  const finishJob = done ? 'line-through' : 'none';
-
+export default function TodoItem() {
   return (
     <View>
       <View
@@ -44,7 +25,7 @@ export default function TodoListItem({
             paddingHorizontal: 10,
             paddingVertical: 5,
           }}>
-          <Text style={{color: '#E2EAF3', fontSize: 20}}>{idx}</Text>
+          <Text style={{color: '#E2EAF3', fontSize: 20}}>1</Text>
         </View>
         <View
           style={{
@@ -63,9 +44,9 @@ export default function TodoListItem({
               color: '#E2EAF3',
               fontSize: 18,
               alignItems: 'center',
-              textDecorationLine: finishJob,
+              // textDecorationLine: finishJob,
             }}>
-            {job}
+            Job
           </Text>
           <View style={{flexDirection: 'row'}}>
             <TouchableOpacity
@@ -74,7 +55,8 @@ export default function TodoListItem({
                 justifyContent: 'center',
                 marginLeft: 10,
               }}
-              onPress={onToggleCheck}>
+              // onPress={onToggleCheck}
+            >
               <Feather name="check" color="#E2EAF3" size={18} />
             </TouchableOpacity>
             <TouchableOpacity
@@ -82,9 +64,10 @@ export default function TodoListItem({
                 alignItems: 'center',
                 justifyContent: 'center',
                 marginLeft: 10,
-                display: main === 'main' ? 'flex' : 'none',
+                // display: screen === 'main' ? 'flex' : 'none',
               }}
-              onPress={onRemove}>
+              // onPress={onRemove}
+            >
               <Feather name="trash-2" color="#E2EAF3" size={18} />
             </TouchableOpacity>
           </View>
