@@ -9,23 +9,29 @@ const {
 } = require("./security/security");
 
 exports.register = async (req, res) => {
-  const duplicate = await User.findOne({ where: { email: req.body.email } });
+  console.info(User);
+  try {
+    const inputEmail = req.body.email;
+    const duplicate = await User.findOne({ where: { email: inputEmail } });
 
-  if (duplicate) {
-    res.status(404).json({ message: "email is exist" });
+    if (duplicate) {
+      res.status(404).json({ message: "email is exist" });
+    }
+
+    req.body.password = await hashPassword(req.body.password);
+    const { username, email, password } = req.body;
+
+    let user = await User.create({ username, email, password });
+    const accesToken = generateToken({ id: user.id });
+
+    user = user.toJSON();
+    delete user.password;
+    console.info(user);
+    // send token as http-cookie
+    sendCookie(res, accesToken);
+  } catch (err) {
+    console.error(err);
   }
-
-  req.body.password = await hashPassword(req.body.password);
-
-  let user = await User.create(req.body);
-
-  const accesToken = generateToken({ id: user.id });
-
-  user = user.toJSON();
-  delete user.password;
-
-  // send token as http-cookie
-  sendCookie(res, accesToken);
 
   return res.status(200).json({
     message: "succes",
@@ -35,7 +41,7 @@ exports.register = async (req, res) => {
 };
 
 exports.login = async (req, res) => {
-  const user = await User.findOne({ where: { email: req.body.email } });
+  let user = await User.findOne({ where: { email: req.body.email } });
 
   if (!user) {
     res.status(404).json({ message: "wrong email or password" });

@@ -22,8 +22,8 @@ Todos.belongsTo(User, {
 });
 
 sequelize
-  // .sync()
-  .sync({ force: true })
+  .sync()
+  // .sync({ force: true })
   .then((data) => {
     console.info(data);
     app.listen(PORT, () => {
