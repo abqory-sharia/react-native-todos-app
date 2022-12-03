@@ -2,6 +2,8 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const sequelize = require("./src/config/database");
+const Todos = require("./src/models/todos");
+const User = require("./src/models/user");
 
 const routes = require("./src/routes");
 
@@ -14,9 +16,14 @@ app.use(cors());
 
 app.use(routes);
 
+User.hasMany(Todos);
+Todos.belongsTo(User, {
+  foreignKey: "userId",
+});
+
 sequelize
-  .sync()
-  // .sync({ force: true })
+  // .sync()
+  .sync({ force: true })
   .then((data) => {
     console.info(data);
     app.listen(PORT, () => {
