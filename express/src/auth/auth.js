@@ -9,7 +9,6 @@ const {
 } = require("./security/security");
 
 exports.register = async (req, res) => {
-  console.info(User);
   try {
     const inputEmail = req.body.email;
     const duplicate = await User.findOne({ where: { email: inputEmail } });
@@ -26,18 +25,17 @@ exports.register = async (req, res) => {
 
     user = user.toJSON();
     delete user.password;
-    console.info(user);
     // send token as http-cookie
     sendCookie(res, accesToken);
+
+    return res.status(200).json({
+      message: "succes",
+      user,
+      accesToken,
+    });
   } catch (err) {
     console.error(err);
   }
-
-  return res.status(200).json({
-    message: "succes",
-    user,
-    accesToken,
-  });
 };
 
 exports.login = async (req, res) => {

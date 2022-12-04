@@ -25,7 +25,6 @@ sequelize
   .sync()
   // .sync({ force: true })
   .then((data) => {
-    console.info(data);
     app.listen(PORT, () => {
       console.info(`This Apps was running in port ${PORT}`);
     });
